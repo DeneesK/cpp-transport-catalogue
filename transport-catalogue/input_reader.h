@@ -17,7 +17,7 @@ enum class Info {
 
 std::istream& InputReader(std::istream& input, catalogue::TransportCatalogue& catalog);
 
-std::pair<double, double> ParseCoordinates(const std::string line);
+std::pair<double, double> ParseCoordinates(std::string line);
 std::pair<std::string, Coordinates> ParseStop(std::string text);
 std::pair<std::string, std::vector<std::string>> ParseBus(std::string text);
 std::vector<std::pair<std::string, int>> ParseDistance(std::string text);

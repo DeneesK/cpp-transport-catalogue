@@ -35,7 +35,7 @@ istream& InputReader(istream& input, catalogue::TransportCatalogue& catalog){
     return input;
 }
 
-pair<double, double> ParseCoordinates(const string line) {
+pair<double, double> ParseCoordinates(string line) {
     auto lat_begin = line.find_first_of("1234567890");
     auto comma_pos = line.find(',');
     string coor_lng = line.substr(comma_pos + 2);
