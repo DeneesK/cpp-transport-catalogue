@@ -2,7 +2,7 @@
 
 #include "transport_catalogue.h"
 
-namespace output_reader {
+namespace request_reader {
 
 std::istream& StatReader(std::istream& input, catalogue::TransportCatalogue& catalog);
 void PrintStat(std::vector<std::string>& r);

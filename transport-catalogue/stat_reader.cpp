@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iomanip>
 
-namespace output_reader {
+namespace request_reader {
 
 using namespace std;
 

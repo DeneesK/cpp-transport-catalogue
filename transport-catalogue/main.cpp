@@ -8,5 +8,5 @@ using namespace std;
 int main() {
     catalogue::TransportCatalogue catal;
     input_reader::InputReader(cin, catal);
-    output_reader::StatReader(cin, catal);
+    request_reader::StatReader(cin, catal);
 }
