@@ -147,10 +147,13 @@ void StoreData(vector<pair<Info, string>>& data, catalogue::TransportCatalogue& 
         }
 
         if(type == Info::DistanceInfo) {
-            auto to_distance = ParseDistance(text);
+            auto to_distances = ParseDistance(text);
             auto [name, _] = string_processing::Split(text, ':');
             string from_stop = name.substr(5);
-            catalog.AddDistance(from_stop, to_distance);
+            for(auto [to_stop, dist]: to_distances) {
+                catalog.AddDistance(from_stop, to_stop, dist);
+            }
+
         }        
     }
 }

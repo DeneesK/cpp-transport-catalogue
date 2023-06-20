@@ -32,19 +32,25 @@ struct StopHasher {
     }
 };
 
+struct BusInfo {
+    double length;
+    double curvature;
+    int stops_on_route;
+    int unique_stops;
+    bool is_circular;
+};
+
 class TransportCatalogue {
 public:
-    void AddStop(std::string name, Coordinates coords);
-    void AddBus(std::string name, std::vector<std::string> route, bool is_circular);
-    void AddDistance(std::string from_stop, std::vector<std::pair<std::string, int>> to_stop_dis);
+    void AddStop(const std::string& name, Coordinates coords);
+    void AddBus(const std::string&, std::vector<std::string> route, bool is_circular);
+    void AddDistance(const std::string& from_stop, std::string& to_stop, int dist);
 
-    const std::pair<Stop*, bool> GetStop(std::string stop_name) const;
-    const std::pair<Bus*, bool> GetBus(std::string bus_name) const;
-    std::set<std::string_view> GetBuses(std::string stop_name) const;
+    const Stop* GetStop(const std::string& stop_name) const;
+    const Bus* GetBus(const std::string& bus_name) const;
+    std::set<std::string_view> GetBuses(const std::string& stop_name) const;
 
-    double CalculateGeoRouteLength(Bus* bus);
-    double CalculateTrueRouteLength(Bus* bus);
-    int GetTrueDistance(Stop* from, Stop* to);
+    BusInfo GetBusInfo(const string& bus_name);
 
 private:
     std::deque<Stop> stops_;
@@ -53,5 +59,9 @@ private:
     std::unordered_map<std::string_view, Stop*> stopname_to_stop_;
     std::unordered_map<std::string_view, std::set<std::string_view>> stopname_to_busname_;
     std::unordered_map<std::pair<Stop*, Stop*>, int, StopHasher> stops_to_distance_;
+    
+    double CalculateGeoRouteLength(const Bus* bus);
+    double CalculateTrueRouteLength(const Bus* bus);
+    int GetTrueDistance(Stop* from, Stop* to);
 };
 }

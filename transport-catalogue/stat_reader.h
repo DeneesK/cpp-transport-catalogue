@@ -4,9 +4,8 @@
 
 namespace request_reader {
 
-std::istream& StatReader(std::istream& input, catalogue::TransportCatalogue& catalog);
-void PrintStat(std::vector<std::string>& r);
+std::istream& StatReader(std::istream& input, catalogue::TransportCatalogue& catalog, std::ostream& out);
 
-std::string GetRouteInfo(std::string text, catalogue::TransportCatalogue& catalog);
-std::string GetStopInfo(std::string stop_name, catalogue::TransportCatalogue& catalog);
+std::string GetRouteInfo(const std::string& text, catalogue::TransportCatalogue& catalog);
+std::string GetStopInfo(const std::string& stop_name, catalogue::TransportCatalogue& catalog);
 }

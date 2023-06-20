@@ -6,7 +6,7 @@
 using namespace std;
 
 int main() {
-    catalogue::TransportCatalogue catal;
-    input_reader::InputReader(cin, catal);
-    request_reader::StatReader(cin, catal);
+    catalogue::TransportCatalogue catalogue;
+    input_reader::InputReader(cin, catalogue);
+    request_reader::StatReader(cin, catalogue, cout);
 }
