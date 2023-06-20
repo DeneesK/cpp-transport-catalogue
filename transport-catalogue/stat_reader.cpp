@@ -18,11 +18,11 @@ istream& StatReader(istream& input, catalogue::TransportCatalogue& catalog, ostr
         getline(input, data);
         if(data.find("Stop") != string::npos) {
             result = GetStopInfo(data, catalog);
-            out << result;            
+            out << result << endl;            
         }
         if(data.find("Bus") != string::npos) {
             result = GetRouteInfo(data, catalog);
-            out << result;
+            out << result << endl;
         }
         --count;
     }

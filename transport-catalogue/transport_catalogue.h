@@ -50,7 +50,7 @@ public:
     const Bus* GetBus(const std::string& bus_name) const;
     std::set<std::string_view> GetBuses(const std::string& stop_name) const;
 
-    BusInfo GetBusInfo(const string& bus_name);
+    BusInfo GetBusInfo(const std::string& bus_name);
 
 private:
     std::deque<Stop> stops_;
