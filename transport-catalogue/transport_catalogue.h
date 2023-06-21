@@ -11,12 +11,13 @@
 #include <utility>
 #include <set>
 #include <functional>
+#include <optional>
 
 namespace catalogue {
 
 struct Stop {
     std::string name;
-    Coordinates coordinates;
+    geo::Coordinates coordinates;
 };
 
 struct Bus {
@@ -40,17 +41,18 @@ struct BusInfo {
     bool is_circular;
 };
 
+struct StopInfo {
+    std::set<std::string_view> buses;
+};
+
 class TransportCatalogue {
 public:
-    void AddStop(const std::string& name, Coordinates coords);
+    void AddStop(const std::string& name, geo::Coordinates coords);
     void AddBus(const std::string&, std::vector<std::string> route, bool is_circular);
     void AddDistance(const std::string& from_stop, std::string& to_stop, int dist);
 
-    const Stop* GetStop(const std::string& stop_name) const;
-    const Bus* GetBus(const std::string& bus_name) const;
-    std::set<std::string_view> GetBuses(const std::string& stop_name) const;
-
     BusInfo GetBusInfo(const std::string& bus_name);
+    std::optional<StopInfo> GetStopInfo(const std::string& stop_name) const;
 
 private:
     std::deque<Stop> stops_;
@@ -60,6 +62,10 @@ private:
     std::unordered_map<std::string_view, std::set<std::string_view>> stopname_to_busname_;
     std::unordered_map<std::pair<Stop*, Stop*>, int, StopHasher> stops_to_distance_;
     
+    const Stop* GetStop(const std::string& stop_name) const;
+    const Bus* GetBus(const std::string& bus_name) const;
+    std::set<std::string_view> GetBuses(const std::string& stop_name) const;
+
     double CalculateGeoRouteLength(const Bus* bus);
     double CalculateTrueRouteLength(const Bus* bus);
     int GetTrueDistance(Stop* from, Stop* to);

@@ -9,7 +9,7 @@ namespace catalogue {
 
 using namespace std;
 
-void TransportCatalogue::AddStop(const string& name, Coordinates coords) {
+void TransportCatalogue::AddStop(const string& name, geo::Coordinates coords) {
         stops_.push_back(Stop{move(name), move(coords)});
         stopname_to_stop_[stops_.back().name] = &stops_.back();
         stopname_to_busname_[stops_.back().name];
@@ -46,6 +46,15 @@ const Stop* TransportCatalogue::GetStop(const string& stop_name) const {
             return stopname_to_stop_.at(stop_name);
         }
     return nullptr;
+}
+
+optional<StopInfo> TransportCatalogue::GetStopInfo(const string& stop_name) const {
+    auto stop = GetStop(stop_name);
+    if(stop) {
+        auto buses = stopname_to_busname_.at(stop_name);
+        return StopInfo{buses};
+    }
+    return nullopt;
 }
 
 const Bus* TransportCatalogue::GetBus(const string& bus_name) const {   

@@ -1,12 +1,16 @@
-#include "geo.h"
+#include "json_reader.h"
 #include "transport_catalogue.h"
-#include "input_reader.h"
-#include "stat_reader.h"
 
 using namespace std;
 
+
+
 int main() {
-    catalogue::TransportCatalogue catalogue;
-    input_reader::InputReader(cin, catalogue);
-    request_reader::StatReader(cin, catalogue, cout);
+    catalogue::TransportCatalogue db;
+    
+    request_handler::Requests requests = json_reader::LoadJSON(cin, db);
+    
+    request_handler::RequestHandler rq_handler(db);
+    rq_handler.ProceedRequests(requests, cout);
+
 }
