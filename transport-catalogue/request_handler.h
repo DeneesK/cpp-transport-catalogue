@@ -9,7 +9,7 @@ struct Request;
 using Requests = std::vector<request_handler::Request>;
 
 struct Request {
-    std::string id;
+    int id;
     std::string type;
     std::string name;
 };

@@ -51,7 +51,7 @@ public:
     void AddBus(const std::string&, std::vector<std::string> route, bool is_circular);
     void AddDistance(const std::string& from_stop, std::string& to_stop, int dist);
 
-    BusInfo GetBusInfo(const std::string& bus_name);
+    std::optional<BusInfo> GetBusInfo(const std::string& bus_name) const;
     std::optional<StopInfo> GetStopInfo(const std::string& stop_name) const;
 
 private:
@@ -66,8 +66,8 @@ private:
     const Bus* GetBus(const std::string& bus_name) const;
     std::set<std::string_view> GetBuses(const std::string& stop_name) const;
 
-    double CalculateGeoRouteLength(const Bus* bus);
-    double CalculateTrueRouteLength(const Bus* bus);
-    int GetTrueDistance(Stop* from, Stop* to);
+    double CalculateGeoRouteLength(const Bus* bus) const;
+    double CalculateTrueRouteLength(const Bus* bus) const;
+    int GetTrueDistance(Stop* from, Stop* to) const;
 };
 }

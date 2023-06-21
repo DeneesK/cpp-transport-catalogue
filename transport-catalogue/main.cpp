@@ -3,8 +3,6 @@
 
 using namespace std;
 
-
-
 int main() {
     catalogue::TransportCatalogue db;
     

@@ -12,7 +12,7 @@
 namespace json_reader {
     request_handler::Requests LoadJSON(std::istream& input, catalogue::TransportCatalogue& db);
     
-    void ProceedDBRequests(json::Node& req, catalogue::TransportCatalogue& db);
-    void SendStops(std::vector<json::Node*>& stops, catalogue::TransportCatalogue& db);
-    void SendBuses(std::vector<json::Node*>& buses, catalogue::TransportCatalogue& db);
+    void ProceedDBStoring(json::Array& req, catalogue::TransportCatalogue& db);
+    void SendStops(json::Array& stops, catalogue::TransportCatalogue& db);
+    void SendBuses(json::Array& buses, catalogue::TransportCatalogue& db);
 }

@@ -11,10 +11,16 @@ void RequestHandler::ProceedRequests(Requests& requests, std::ostream& out) {
 }
 
 std::optional<catalogue::BusInfo> RequestHandler::GetBusStat(const std::string_view& bus_name) const {
+    if(auto bas_stat = db_.GetBusInfo(std::string(bus_name))) {
+        return bas_stat;
+    }
     return std::nullopt;
 }
 
-std::optional<catalogue::StopInfo> RequestHandler::GetStopStat(const std::string_view& bus_name) const {
+std::optional<catalogue::StopInfo> RequestHandler::GetStopStat(const std::string_view& stop_name) const {
+    if(auto stop_stat = db_.GetStopInfo(std::string(stop_name))) {
+        return stop_stat;
+    }    
     return std::nullopt;
 }
 
@@ -31,7 +37,7 @@ json::Array RequestHandler::PrepareAnswer(Requests& requests) {
                     {"unique_stop_count", bus_stat.value().unique_stops},
                     }});
             } else {
-                answer.push_back(json::Node{json::Dict{{"request_id", req.id}, {"error_message", "not found"}}});
+                answer.push_back(json::Node{json::Dict{{"request_id", req.id}, {"error_message", json::Node{std::string("not found")}}}});
             }
 
         } else {
@@ -45,7 +51,7 @@ json::Array RequestHandler::PrepareAnswer(Requests& requests) {
                     {"request_id", req.id},
                     }});
             } else {
-                answer.push_back(json::Node{json::Dict{{"request_id", req.id}, {"error_message", "not found"}}});
+                answer.push_back(json::Node{json::Dict{{"request_id", req.id}, {"error_message", json::Node{std::string("not found")}}}});
             }
         }
     }

@@ -64,7 +64,7 @@ const Bus* TransportCatalogue::GetBus(const string& bus_name) const {
     return nullptr;
 }
 
-BusInfo TransportCatalogue::GetBusInfo(const string& bus_name) {
+optional<BusInfo> TransportCatalogue::GetBusInfo(const string& bus_name) const {
     auto bus = GetBus(bus_name);
     if(bus){
         if(bus->is_circular) {
@@ -86,17 +86,17 @@ BusInfo TransportCatalogue::GetBusInfo(const string& bus_name) {
         }
         return BusInfo{length, curvature, size, int(uniq.size()), bus->is_circular};
     }
-    return BusInfo{};    
+    return nullopt;    
 }
 
-int TransportCatalogue::GetTrueDistance(Stop* from, Stop* to) {
+int TransportCatalogue::GetTrueDistance(Stop* from, Stop* to) const {
     if(stops_to_distance_.count({from, to})) {
         return stops_to_distance_.at({from, to});
     }
     return stops_to_distance_.at({to, from});
 }
 
-double TransportCatalogue::CalculateGeoRouteLength(const Bus* bus) {
+double TransportCatalogue::CalculateGeoRouteLength(const Bus* bus) const {
     double result = 0;
     for(auto it = bus->route.begin(); it != bus->route.end(); ++it) {
         if(next(it) != bus->route.end()) {
@@ -106,7 +106,7 @@ double TransportCatalogue::CalculateGeoRouteLength(const Bus* bus) {
     return result;
 }
 
-double TransportCatalogue::CalculateTrueRouteLength(const Bus* bus) {
+double TransportCatalogue::CalculateTrueRouteLength(const Bus* bus) const {
     int result = 0;
     if(bus->is_circular) {
         for(auto it = bus->route.begin(); it != bus->route.end(); ++it) {
