@@ -2,6 +2,7 @@
 
 #include "transport_catalogue.h"
 #include "json.h"
+#include "domain.h"
 
 namespace request_handler {
 
@@ -19,6 +20,8 @@ public:
     RequestHandler(const catalogue::TransportCatalogue& db);
 
     void ProceedRequests(Requests& requests, std::ostream& out);
+    std::vector<domain::BusRoute> GetAllRoutes();
+
 private:
     const catalogue::TransportCatalogue& db_;
 

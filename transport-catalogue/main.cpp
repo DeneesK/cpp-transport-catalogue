@@ -6,9 +6,9 @@ using namespace std;
 int main() {
     catalogue::TransportCatalogue db;
     
-    request_handler::Requests requests = json_reader::LoadJSON(cin, db);
+    json_reader::ReaderResult result = json_reader::LoadJSON(cin, db);
     
     request_handler::RequestHandler rq_handler(db);
-    rq_handler.ProceedRequests(requests, cout);
+    // rq_handler.ProceedRequests(result.requests, cout);
 
 }
