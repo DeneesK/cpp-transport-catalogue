@@ -64,6 +64,10 @@ const Bus* TransportCatalogue::GetBus(const string& bus_name) const {
     return nullptr;
 }
 
+const std::deque<Bus>* TransportCatalogue::GetAllBuses() const {
+    return &buses_;
+}
+
 optional<BusInfo> TransportCatalogue::GetBusInfo(const string& bus_name) const {
     auto bus = GetBus(bus_name);
     if(bus){
@@ -129,7 +133,7 @@ double TransportCatalogue::CalculateTrueRouteLength(const Bus* bus) const {
     return result;  
 }
 
-set<string_view> TransportCatalogue::GetBuses(const string& stop_name) const {
+set<string_view> TransportCatalogue::GetBusesByStop(const string& stop_name) const {
     if(stopname_to_busname_.count(stop_name)) {
         return stopname_to_busname_.at(stop_name);
     }

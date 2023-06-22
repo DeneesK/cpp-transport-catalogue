@@ -53,6 +53,9 @@ public:
 
     std::optional<BusInfo> GetBusInfo(const std::string& bus_name) const;
     std::optional<StopInfo> GetStopInfo(const std::string& stop_name) const;
+    const std::deque<Bus>* GetAllBuses() const;
+    const Stop* GetStop(const std::string& stop_name) const;
+    const Bus* GetBus(const std::string& bus_name) const;
 
 private:
     std::deque<Stop> stops_;
@@ -62,9 +65,7 @@ private:
     std::unordered_map<std::string_view, std::set<std::string_view>> stopname_to_busname_;
     std::unordered_map<std::pair<Stop*, Stop*>, int, StopHasher> stops_to_distance_;
     
-    const Stop* GetStop(const std::string& stop_name) const;
-    const Bus* GetBus(const std::string& bus_name) const;
-    std::set<std::string_view> GetBuses(const std::string& stop_name) const;
+    std::set<std::string_view> GetBusesByStop(const std::string& stop_name) const;
 
     double CalculateGeoRouteLength(const Bus* bus) const;
     double CalculateTrueRouteLength(const Bus* bus) const;

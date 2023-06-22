@@ -1,10 +1,11 @@
 #pragma once
 
-#include "json_reader.h"
-#include "svg.h"
-#include "domain.h"
+#include "request_handler.h"
 
 namespace map_render {
+
+struct RenderSettings;
+
 struct RenderSettings {
     double width;
     double height;
@@ -24,9 +25,8 @@ struct RenderSettings {
 
 class MapRender {
 public:
-    MapRender(RenderSettings settings): settings_(settings)
-    {       
-    }
+    MapRender(RenderSettings settings);
+    void Render(request_handler::RequestHandler& rh, std::ostream& out);
 private:
     RenderSettings settings_;
 };

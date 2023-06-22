@@ -58,4 +58,20 @@ json::Array RequestHandler::PrepareAnswer(Requests& requests) {
 
     return answer;    
 }
+
+std::vector<domain::BusRoute> RequestHandler::GetAllRoutes() {
+    std::vector<domain::BusRoute> routes;
+    auto buses = db_.GetAllBuses();
+    for(auto bus: *buses) {
+        auto name = bus.name;
+        auto is_circular = bus.is_circular;
+        std::vector<geo::Coordinates> coords;
+
+        for(auto stop: bus.route) {
+            coords.push_back(stop->coordinates);
+        }
+        routes.push_back({name, coords, is_circular});
+    }
+    return routes;
+}
 }

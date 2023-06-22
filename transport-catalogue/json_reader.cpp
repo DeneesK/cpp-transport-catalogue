@@ -88,6 +88,7 @@ namespace json_reader {
         settings.stop_label_offset.first = render_settings.at("stop_label_offset").AsArray()[0].AsDouble();
         settings.stop_label_offset.second = render_settings.at("stop_label_offset").AsArray()[1].AsDouble();
         settings.underlayer_width = render_settings.at("underlayer_width").AsDouble();
+        
         for (auto color: render_settings.at("color_palette").AsArray()) {
             if(color.IsString()) {
                 settings.color_palette.push_back(color.AsString());

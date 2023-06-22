@@ -12,9 +12,7 @@
 namespace domain {
 
 inline const double EPSILON = 1e-6;
-bool IsZero(double value) {
-    return std::abs(value) < EPSILON;
-}
+bool IsZero(double value);
 
 struct BusRoute {
     std::string name;

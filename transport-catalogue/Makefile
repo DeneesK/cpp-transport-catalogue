@@ -5,12 +5,15 @@ run: build
 build:
 	clang++ -c transport_catalogue.cpp -std=c++17 -Wno-everything
 	clang++ -c json_reader.cpp -std=c++17 -Wno-everything
+	clang++ -c domain.cpp -std=c++17 -Wno-everything
 	clang++ -c geo.cpp -std=c++17 -Wno-everything
+	clang++ -c svg.cpp -std=c++17 -Wno-everything
 	clang++ -c json.cpp -std=c++17 -Wno-everything
 	clang++ -c request_handler.cpp -std=c++17 -Wno-everything
+	clang++ -c map_renderer.cpp -std=c++17 -Wno-everything
 	clang++ -c main.cpp -std=c++17 -Wno-everything
-	clang++ -o main.exe transport_catalogue.o geo.o json.o json_reader.o request_handler.o main.o -std=c++17 -Wno-everything
-	del transport_catalogue.o geo.o main.o json.o json_reader.o request_handler.o
+	clang++ -o main domain.o transport_catalogue.o geo.o json.o json_reader.o request_handler.o map_renderer.o svg.o main.o -std=c++17 -Wno-everything
+	rm transport_catalogue.o geo.o json.o json_reader.o request_handler.o map_renderer.o domain.o svg.o main.o
 
 clean:
-	del main.exe transport_catalogue.o geo.o main.o json.o json_reader.o request_handler.o
+	rm main transport_catalogue.o geo.o json.o json_reader.o request_handler.o map_renderer.o domain.o svg.o main.o domain.o

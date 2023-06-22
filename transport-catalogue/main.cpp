@@ -1,5 +1,5 @@
 #include "json_reader.h"
-#include "transport_catalogue.h"
+#include "map_renderer.h"
 
 using namespace std;
 
@@ -10,5 +10,6 @@ int main() {
     
     request_handler::RequestHandler rq_handler(db);
     // rq_handler.ProceedRequests(result.requests, cout);
-
+    map_render::MapRender m_render(result.settings);
+    m_render.Render(rq_handler, cout);
 }
