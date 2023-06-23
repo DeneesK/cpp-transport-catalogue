@@ -10,7 +10,7 @@ namespace catalogue {
 using namespace std;
 
 void TransportCatalogue::AddStop(const string& name, geo::Coordinates coords) {
-        stops_.push_back(Stop{move(name), move(coords)});
+        stops_.push_back(Stop{std::move(name), std::move(coords)});
         stopname_to_stop_[stops_.back().name] = &stops_.back();
         stopname_to_busname_[stops_.back().name];
 }
@@ -33,7 +33,7 @@ void TransportCatalogue::AddBus(const string& name, vector<string> route, bool i
         }
     }
 
-    buses_.push_back(Bus{move(name), move(r), is_circular});
+    buses_.push_back(Bus{std::move(name), std::move(r), is_circular});
     busname_to_bus_[buses_.back().name] = &buses_.back();
 
     for(auto stop: buses_.back().route) {

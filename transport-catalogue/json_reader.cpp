@@ -95,10 +95,15 @@ namespace json_reader {
             } else {
             if (color.AsArray().size() == 3) {
                 auto color_arr = color.AsArray();
-                settings.color_palette.push_back(svg::Rgb{color_arr[0].AsInt(), color_arr[1].AsInt(), color_arr[2].AsInt()});
+                settings.color_palette.push_back(svg::Rgb{static_cast<uint16_t>(color_arr[0].AsInt()),
+                                                          static_cast<uint16_t>(color_arr[1].AsInt()),
+                                                          static_cast<uint16_t>(color_arr[2].AsInt())});
             } else {
                 auto color_arr = color.AsArray();
-                settings.color_palette.push_back(svg::Rgba{color_arr[0].AsInt(), color_arr[1].AsInt(), color_arr[2].AsInt(), color_arr[2].AsDouble()});
+                settings.color_palette.push_back(svg::Rgba{static_cast<uint16_t>(color_arr[0].AsInt()),
+                                                           static_cast<uint16_t>(color_arr[1].AsInt()),
+                                                           static_cast<uint16_t>(color_arr[2].AsInt()),
+                                                           color_arr[2].AsDouble()});
             }                
             }
         }
@@ -108,10 +113,15 @@ namespace json_reader {
         } else {
             if (render_settings.at("underlayer_color").AsArray().size() == 3) {
                 auto color_arr = render_settings.at("underlayer_color").AsArray();
-                settings.underlayer_color = svg::Rgb{color_arr[0].AsInt(), color_arr[1].AsInt(), color_arr[2].AsInt()};
+                settings.underlayer_color = svg::Rgb{static_cast<uint16_t>(color_arr[0].AsInt()),
+                                                     static_cast<uint16_t>(color_arr[1].AsInt()),
+                                                     static_cast<uint16_t>(color_arr[2].AsInt())};
             } else {
                 auto color_arr = render_settings.at("underlayer_color").AsArray();
-                settings.underlayer_color = svg::Rgba{color_arr[0].AsInt(), color_arr[1].AsInt(), color_arr[2].AsInt(), color_arr[2].AsDouble()};
+                settings.underlayer_color = svg::Rgba{static_cast<uint16_t>(color_arr[0].AsInt()),
+                                                      static_cast<uint16_t>(color_arr[1].AsInt()),
+                                                      static_cast<uint16_t>(color_arr[2].AsInt()),
+                                                      color_arr[2].AsDouble()};
             }
         }
 

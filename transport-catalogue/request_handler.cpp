@@ -37,7 +37,9 @@ json::Array RequestHandler::PrepareAnswer(Requests& requests) {
                     {"unique_stop_count", bus_stat.value().unique_stops},
                     }});
             } else {
-                answer.push_back(json::Node{json::Dict{{"request_id", req.id}, {"error_message", json::Node{std::string("not found")}}}});
+                answer.push_back(json::Node{json::Dict{{"request_id", req.id},
+                {"error_message", json::Node{std::string("not found")}}
+                }});
             }
 
         } else {
@@ -51,7 +53,9 @@ json::Array RequestHandler::PrepareAnswer(Requests& requests) {
                     {"request_id", req.id},
                     }});
             } else {
-                answer.push_back(json::Node{json::Dict{{"request_id", req.id}, {"error_message", json::Node{std::string("not found")}}}});
+                answer.push_back(json::Node{json::Dict{{"request_id", req.id},
+                {"error_message", json::Node{std::string("not found")}}
+                }});
             }
         }
     }
