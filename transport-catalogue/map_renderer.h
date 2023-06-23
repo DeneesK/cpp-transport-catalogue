@@ -29,5 +29,10 @@ public:
     void Render(request_handler::RequestHandler& rh, std::ostream& out);
 private:
     RenderSettings settings_;
+
+    void LineRender(svg::Document& doc, std::vector<domain::BusRoute> routes, domain::SphereProjector& project);
+    void BusNameRender(svg::Document& doc, std::vector<domain::BusRoute> routes, domain::SphereProjector& project);
+    void StopLableRender(svg::Document& doc, std::vector<domain::Stop> stops, domain::SphereProjector& project);
+    void StopNameRender(svg::Document& doc, std::vector<domain::Stop> stops, domain::SphereProjector& project);
 };
 }

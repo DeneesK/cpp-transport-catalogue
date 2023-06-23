@@ -8,6 +8,7 @@
 #include <iostream>
 #include <optional>
 #include <vector>
+#include <string>
 
 namespace domain {
 
@@ -18,6 +19,11 @@ struct BusRoute {
     std::string name;
     std::vector<geo::Coordinates>  coordinates;
     bool is_circular;
+};
+
+struct Stop {
+    std::string name;
+    geo::Coordinates coords;
 };
 
 class SphereProjector {

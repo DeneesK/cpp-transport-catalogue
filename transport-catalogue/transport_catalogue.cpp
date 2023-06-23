@@ -139,4 +139,8 @@ set<string_view> TransportCatalogue::GetBusesByStop(const string& stop_name) con
     }
     return {};
 }
+
+const std::deque<Stop>* TransportCatalogue::GetAllStops() const {
+    return &stops_;
+}
 }

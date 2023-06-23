@@ -21,7 +21,7 @@ public:
 
     void ProceedRequests(Requests& requests, std::ostream& out);
     std::vector<domain::BusRoute> GetAllRoutes();
-
+    std::vector<domain::Stop> GetAllStops();
 private:
     const catalogue::TransportCatalogue& db_;
 

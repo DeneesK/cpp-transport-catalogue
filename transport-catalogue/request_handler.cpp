@@ -1,5 +1,8 @@
 #include "request_handler.h"
 
+#include <algorithm>
+#include <optional>
+
 namespace request_handler {
 
 RequestHandler::RequestHandler(const catalogue::TransportCatalogue& db): db_(db) {}
@@ -77,5 +80,18 @@ std::vector<domain::BusRoute> RequestHandler::GetAllRoutes() {
         routes.push_back({name, coords, is_circular});
     }
     return routes;
+}
+
+std::vector<domain::Stop> RequestHandler::GetAllStops() {
+    std::vector<domain::Stop> stps;   
+    auto stops = db_.GetAllStops();
+    for(auto stop: *stops) {
+        if(db_.GetStopInfo(stop.name) != std::nullopt && !db_.GetStopInfo(stop.name).value().buses.empty()) {
+                stps.push_back({stop.name, stop.coordinates});   
+        }
+    }
+    sort(stps.begin(), stps.end(), [](auto& lhs, auto& rhs){return std::lexicographical_compare(lhs.name.begin(), lhs.name.end(),
+                                                                                                rhs.name.begin(), rhs.name.end());});;
+    return stps;
 }
 }

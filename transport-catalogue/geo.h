@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stddef.h>
+
 namespace geo {
 
 struct Coordinates {
@@ -13,7 +15,7 @@ struct Coordinates {
     }
 };
 
-struct CoordinateshHasher {
+struct CoordinatesHasher {
     size_t operator()(Coordinates key) const {
         return static_cast<size_t>(key.lat * 17 + key.lng * 19);
     }

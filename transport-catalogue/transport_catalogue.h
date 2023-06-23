@@ -54,6 +54,7 @@ public:
     std::optional<BusInfo> GetBusInfo(const std::string& bus_name) const;
     std::optional<StopInfo> GetStopInfo(const std::string& stop_name) const;
     const std::deque<Bus>* GetAllBuses() const;
+    const std::deque<Stop>* GetAllStops() const;
     const Stop* GetStop(const std::string& stop_name) const;
     const Bus* GetBus(const std::string& bus_name) const;
 
