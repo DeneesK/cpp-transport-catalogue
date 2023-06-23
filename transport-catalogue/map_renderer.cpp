@@ -1,16 +1,19 @@
 #include "map_renderer.h"
 
+#include <unordered_set>
+
 namespace map_render {
 
 MapRender::MapRender(RenderSettings settings): settings_(settings) {}
 
 void MapRender::Render(request_handler::RequestHandler& rh, std::ostream& out) {
     std::vector<domain::BusRoute> routes = rh.GetAllRoutes();
-    std::vector<geo::Coordinates> coords;
+    std::unordered_set<geo::Coordinates, geo::CoordinateshHasher> unique_cords;
     for(auto route: routes) {
-        coords.insert(coords.end(), route.coordinates.begin(), route.coordinates.end());
+        unique_cords.insert(route.coordinates.begin(), route.coordinates.end());
     }
-    domain::SphereProjector project(coords.begin(), coords.end(), settings_.width, settings_.height, settings_.padding);
+
+    domain::SphereProjector project(unique_cords.begin(), unique_cords.end(), settings_.width, settings_.height, settings_.padding);
 
     svg::Document doc;
     int i = 0;
@@ -22,24 +25,20 @@ void MapRender::Render(request_handler::RequestHandler& rh, std::ostream& out) {
             for(auto stop: route.coordinates) {
                 line.AddPoint(project(stop));
             }
-            if(!route.is_circular) {
-            for(auto it = route.coordinates.rbegin()+1; it != route.coordinates.rend(); ++it) {
-                line.AddPoint(project(*it));
+            if(!route.is_circular && route.coordinates.size() >= 2) {
+                for(auto it = route.coordinates.rbegin()+1; it != route.coordinates.rend(); ++it) {
+                        line.AddPoint(project(*it));
+                    }
             }
-            }
-            if(i > int(settings_.color_palette.size()-1)) {
-                i = 0;
             }
             line.SetFillColor("none");
-            line.SetStrokeColor(settings_.color_palette[i]);
+            line.SetStrokeColor(settings_.color_palette[i % settings_.color_palette.size()]);
             line.SetStrokeWidth(settings_.line_width);
             line.SetStrokeLineCap(settings_.stroke_linecap);
             line.SetStrokeLineJoin(settings_.stroke_linejoin);
             doc.Add(line);
             ++i;
         }
-    }
-    
     doc.Render(out);
 }
 }

@@ -103,7 +103,7 @@ namespace json_reader {
                 settings.color_palette.push_back(svg::Rgba{static_cast<uint16_t>(color_arr[0].AsInt()),
                                                            static_cast<uint16_t>(color_arr[1].AsInt()),
                                                            static_cast<uint16_t>(color_arr[2].AsInt()),
-                                                           color_arr[2].AsDouble()});
+                                                           color_arr[3].AsDouble()});
             }                
             }
         }
@@ -121,7 +121,7 @@ namespace json_reader {
                 settings.underlayer_color = svg::Rgba{static_cast<uint16_t>(color_arr[0].AsInt()),
                                                       static_cast<uint16_t>(color_arr[1].AsInt()),
                                                       static_cast<uint16_t>(color_arr[2].AsInt()),
-                                                      color_arr[2].AsDouble()};
+                                                      color_arr[3].AsDouble()};
             }
         }
 
