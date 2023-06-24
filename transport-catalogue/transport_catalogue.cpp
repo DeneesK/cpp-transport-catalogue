@@ -9,8 +9,8 @@ namespace catalogue {
 
 using namespace std;
 
-void TransportCatalogue::AddStop(const string& name, Coordinates coords) {
-        stops_.push_back(Stop{move(name), move(coords)});
+void TransportCatalogue::AddStop(const string& name, geo::Coordinates coords) {
+        stops_.push_back(Stop{std::move(name), std::move(coords)});
         stopname_to_stop_[stops_.back().name] = &stops_.back();
         stopname_to_busname_[stops_.back().name];
 }
@@ -33,7 +33,7 @@ void TransportCatalogue::AddBus(const string& name, vector<string> route, bool i
         }
     }
 
-    buses_.push_back(Bus{move(name), move(r), is_circular});
+    buses_.push_back(Bus{std::move(name), std::move(r), is_circular});
     busname_to_bus_[buses_.back().name] = &buses_.back();
 
     for(auto stop: buses_.back().route) {
@@ -48,6 +48,15 @@ const Stop* TransportCatalogue::GetStop(const string& stop_name) const {
     return nullptr;
 }
 
+optional<StopInfo> TransportCatalogue::GetStopInfo(const string& stop_name) const {
+    auto stop = GetStop(stop_name);
+    if(stop) {
+        auto buses = stopname_to_busname_.at(stop_name);
+        return StopInfo{buses};
+    }
+    return nullopt;
+}
+
 const Bus* TransportCatalogue::GetBus(const string& bus_name) const {   
     if(busname_to_bus_.count(bus_name)) {
         return busname_to_bus_.at(bus_name);
@@ -55,7 +64,11 @@ const Bus* TransportCatalogue::GetBus(const string& bus_name) const {
     return nullptr;
 }
 
-BusInfo TransportCatalogue::GetBusInfo(const string& bus_name) {
+const std::deque<Bus>* TransportCatalogue::GetAllBuses() const {
+    return &buses_;
+}
+
+optional<BusInfo> TransportCatalogue::GetBusInfo(const string& bus_name) const {
     auto bus = GetBus(bus_name);
     if(bus){
         if(bus->is_circular) {
@@ -77,17 +90,17 @@ BusInfo TransportCatalogue::GetBusInfo(const string& bus_name) {
         }
         return BusInfo{length, curvature, size, int(uniq.size()), bus->is_circular};
     }
-    return BusInfo{};    
+    return nullopt;    
 }
 
-int TransportCatalogue::GetTrueDistance(Stop* from, Stop* to) {
+int TransportCatalogue::GetTrueDistance(Stop* from, Stop* to) const {
     if(stops_to_distance_.count({from, to})) {
         return stops_to_distance_.at({from, to});
     }
     return stops_to_distance_.at({to, from});
 }
 
-double TransportCatalogue::CalculateGeoRouteLength(const Bus* bus) {
+double TransportCatalogue::CalculateGeoRouteLength(const Bus* bus) const {
     double result = 0;
     for(auto it = bus->route.begin(); it != bus->route.end(); ++it) {
         if(next(it) != bus->route.end()) {
@@ -97,7 +110,7 @@ double TransportCatalogue::CalculateGeoRouteLength(const Bus* bus) {
     return result;
 }
 
-double TransportCatalogue::CalculateTrueRouteLength(const Bus* bus) {
+double TransportCatalogue::CalculateTrueRouteLength(const Bus* bus) const {
     int result = 0;
     if(bus->is_circular) {
         for(auto it = bus->route.begin(); it != bus->route.end(); ++it) {
@@ -120,10 +133,14 @@ double TransportCatalogue::CalculateTrueRouteLength(const Bus* bus) {
     return result;  
 }
 
-set<string_view> TransportCatalogue::GetBuses(const string& stop_name) const {
+set<string_view> TransportCatalogue::GetBusesByStop(const string& stop_name) const {
     if(stopname_to_busname_.count(stop_name)) {
         return stopname_to_busname_.at(stop_name);
     }
     return {};
+}
+
+const std::deque<Stop>* TransportCatalogue::GetAllStops() const {
+    return &stops_;
 }
 }

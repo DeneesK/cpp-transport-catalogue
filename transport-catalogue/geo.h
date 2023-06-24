@@ -1,10 +1,12 @@
 #pragma once
 
-#include <cmath>
+#include <stddef.h>
+
+namespace geo {
 
 struct Coordinates {
-    double lat;
-    double lng;
+    double lat = 0; // Широта
+    double lng = 0; // Долгота
     bool operator==(const Coordinates& other) const {
         return lat == other.lat && lng == other.lng;
     }
@@ -13,13 +15,12 @@ struct Coordinates {
     }
 };
 
-inline double ComputeDistance(Coordinates from, Coordinates to) {
-    using namespace std;
-    if (from == to) {
-        return 0;
+struct CoordinatesHasher {
+    size_t operator()(Coordinates key) const {
+        return static_cast<size_t>(key.lat * 17 + key.lng * 19);
     }
-    static const double dr = 3.1415926535 / 180.;
-    return acos(sin(from.lat * dr) * sin(to.lat * dr)
-                + cos(from.lat * dr) * cos(to.lat * dr) * cos(abs(from.lng - to.lng) * dr))
-        * 6371000;
-}
+};
+
+double ComputeDistance(Coordinates from, Coordinates to);
+
+}  // namespace geo
