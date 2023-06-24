@@ -10,13 +10,13 @@ namespace json_reader {
         json::Dict dict = doc.GetRoot().AsMap();
         json::Array base_requests = dict.at("base_requests").AsArray();
         json::Dict render_settings = dict.at("render_settings").AsMap();
-        // json::Array stat_requests = dict.at("stat_requests").AsArray();
+        json::Array stat_requests = dict.at("stat_requests").AsArray();
 
         ProceedDBStoring(base_requests, db);
-        // request_handler::Requests requests = ParseStatRequests(stat_requests);
+        request_handler::Requests requests = ParseStatRequests(stat_requests);
         map_render::RenderSettings settings = ParseRenderSettings(render_settings);
 
-        return ReaderResult{{}, settings};
+        return ReaderResult{requests, settings};
     }
 
     void ProceedDBStoring(json::Array& req, catalogue::TransportCatalogue& db) {
@@ -68,8 +68,12 @@ namespace json_reader {
             json::Dict request = req.AsMap();
             auto id = request.at("id").AsInt();
             auto type = request.at("type").AsString();
-            auto name = request.at("name").AsString();
-            requests.push_back(request_handler::Request{id, type, name});
+            if(request.count("name")) {
+              auto name = request.at("name").AsString();
+              requests.push_back(request_handler::Request{id, type, name});
+            } else {
+                requests.push_back(request_handler::Request{id, type, ""});
+            }
         }
         return requests;
     }

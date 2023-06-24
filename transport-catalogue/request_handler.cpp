@@ -7,8 +7,8 @@ namespace request_handler {
 
 RequestHandler::RequestHandler(const catalogue::TransportCatalogue& db): db_(db) {}
 
-void RequestHandler::ProceedRequests(Requests& requests, std::ostream& out) {
-    json::Array answer = PrepareAnswer(requests);
+void RequestHandler::ProceedRequests(Requests& requests, std::string& renndered_map, std::ostream& out) {
+    json::Array answer = PrepareAnswer(requests, renndered_map);
     json::Document doc(answer);
     json::Print(doc, out);
 }
@@ -27,7 +27,7 @@ std::optional<catalogue::StopInfo> RequestHandler::GetStopStat(const std::string
     return std::nullopt;
 }
 
-json::Array RequestHandler::PrepareAnswer(Requests& requests) {
+json::Array RequestHandler::PrepareAnswer(Requests& requests,  std::string& renndered_map) {
     json::Array answer;
     for(auto req: requests) {
         if(req.type == "Bus") {
@@ -45,7 +45,7 @@ json::Array RequestHandler::PrepareAnswer(Requests& requests) {
                 }});
             }
 
-        } else {
+        } else if(req.type == "Stop") {
             if(auto stop_stat = GetStopStat(req.name)) {
                 json::Array route;
                 for (auto bus: stop_stat.value().buses) {
@@ -60,6 +60,10 @@ json::Array RequestHandler::PrepareAnswer(Requests& requests) {
                 {"error_message", json::Node{std::string("not found")}}
                 }});
             }
+        } else {
+            answer.push_back(json::Node{json::Dict{{"request_id", req.id},
+                {"map", json::Node{renndered_map}}
+                }});
         }
     }
 

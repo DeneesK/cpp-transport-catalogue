@@ -9,7 +9,12 @@ int main() {
     json_reader::ReaderResult result = json_reader::LoadJSON(cin, db);
     
     request_handler::RequestHandler rq_handler(db);
-    // rq_handler.ProceedRequests(result.requests, cout);
     map_render::MapRender m_render(result.settings);
-    m_render.Render(rq_handler, cout);
+   
+    std::ostringstream os;
+    m_render.Render(rq_handler, os);   
+    auto strinng_map= os.str();
+   
+    rq_handler.ProceedRequests(result.requests, strinng_map, cout);
+
 }
