@@ -248,114 +248,105 @@ Node LoadNode(istream& input) {
 
 }  // namespace
 
-Node::Node(Array array): value_(array) {}
-Node::Node(): value_(nullptr) {}
-Node::Node(nullptr_t): value_(nullptr) {}
-Node::Node(Dict map): value_(map) {}
-Node::Node(int value): value_(value) {}
-Node::Node(double value): value_(value) {}
-Node::Node(string value): value_(value) {}
-Node::Node(bool value): value_(value) {}
-
-const Node::Value& Node::GetValue() const { 
-    return value_; 
+const Node& Node::GetValue() const { 
+    return *this; 
 }
 
 const Array& Node::AsArray() const {
-    if (holds_alternative<Array>(value_)) {
-        return get<Array>(value_);
+    if (holds_alternative<Array>(*this)) {
+        return get<Array>(*this);
     }
     throw logic_error("wrong value type");
 }
 
 const Dict& Node::AsMap() const {
-    if (holds_alternative<Dict>(value_)) {
-        return get<Dict>(value_);
+    if (holds_alternative<Dict>(*this)) {
+        return get<Dict>(*this);
     }
     throw logic_error("wrong value type");
 }
 
 int Node::AsInt() const {
-    if (holds_alternative<int>(value_)) {
-        return get<int>(value_);
+    if (holds_alternative<int>(*this)) {
+        return get<int>(*this);
     }
     throw logic_error("wrong value type");
 }
 
 double Node::AsDouble() const {
-    if (holds_alternative<double>(value_)) {
-        return get<double>(value_);
-    } else if (holds_alternative<int>(value_)) {
-        return static_cast<double>(get<int>(value_));
+    if (holds_alternative<double>(*this)) {
+        return get<double>(*this);
+    } else if (holds_alternative<int>(*this)) {
+        return static_cast<double>(get<int>(*this));
     }
     throw logic_error("wrong value type");
 }
 
 bool Node::AsBool() const {
-    if (holds_alternative<bool>(value_)) {
-        return get<bool>(value_);
+    if (holds_alternative<bool>(*this)) {
+        return get<bool>(*this);
     }
     throw logic_error("wrong value type");
 }
 
 const string& Node::AsString() const {
-    if (holds_alternative<string>(value_)) {
-        return get<string>(value_);
+    if (holds_alternative<string>(*this)) {
+        return get<string>(*this);
     }
     throw logic_error("wrong value type");
 }
 
 bool Node::IsInt() const {
-    if (holds_alternative<int>(value_)) {
+    if (holds_alternative<int>(*this)) {
         return true;
     }
     return false;  
 }
 
 bool Node::IsDouble() const {
-    if (holds_alternative<double>(value_) || holds_alternative<int>(value_)) {
+    if (holds_alternative<double>(*this) || holds_alternative<int>(*this)) {
         return true;
     }
     return false;     
 }
 
 bool Node::IsPureDouble() const {
-    if (holds_alternative<double>(value_)) {
+    if (holds_alternative<double>(*this)) {
         return true;
     }
     return false;       
 }
 
 bool Node::IsBool() const {
-    if (holds_alternative<bool>(value_)) {
+    if (holds_alternative<bool>(*this)) {
         return true;
     }
     return false;   
 }
 
 bool Node::IsString() const {
-    if (holds_alternative<string>(value_)) {
+    if (holds_alternative<string>(*this)) {
         return true;
     }
     return false;   
 }
 
 bool Node::IsNull() const {
-    if (holds_alternative<nullptr_t>(value_)) {
+    if (holds_alternative<nullptr_t>(*this)) {
         return true;
     }
     return false;   
 }
 
 bool Node::IsArray() const {
-    if (holds_alternative<Array>(value_)) {
+    if (holds_alternative<Array>(*this)) {
         return true;
     }
     return false;   
 }
 
 bool Node::IsMap() const {
-    if (holds_alternative<Dict>(value_)) {
+    if (holds_alternative<Dict>(*this)) {
         return true;
     }
     return false;   

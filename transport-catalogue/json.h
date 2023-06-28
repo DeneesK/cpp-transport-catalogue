@@ -16,26 +16,19 @@ using Dict = std::map<std::string, Node>;
 using Array = std::vector<Node>;
 using EscapeC = std::map<char, std::string>;
 using Number = std::variant<int, double>;
+using Value = std::variant<std::nullptr_t, Array, Dict, bool, int, double, std::string>;
 
 class ParsingError : public std::runtime_error {
 public:
     using runtime_error::runtime_error;
 };
 
-class Node {
+class Node: public Value {
 public:
-    using Value = std::variant<std::nullptr_t, Array, Dict, bool, int, double, std::string>;
+    // Огромное спасибо, за подсказку, так намного лучше и еще лучше разобрался в наследовании!
+    using Value::variant;
 
-    Node();
-    Node(std::nullptr_t);
-    Node(Array array);
-    Node(Dict map);
-    Node(int value);
-    Node(double value);
-    Node(std::string value);
-    Node(bool value);
-
-    const Value& GetValue() const;
+    const Node& GetValue() const;
     const Array& AsArray() const;
     const Dict& AsMap() const;
     int AsInt() const;
@@ -54,9 +47,6 @@ public:
 
     bool operator==(const Node& other) const;
     bool operator!=(const Node& other) const;
-
-private:
-    Value value_;
 };
 
 class Document {

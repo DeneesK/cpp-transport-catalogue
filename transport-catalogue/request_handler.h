@@ -19,15 +19,11 @@ class RequestHandler {
 public:
     RequestHandler(const catalogue::TransportCatalogue& db);
 
-    void ProceedRequests(Requests& requests, std::string& renndered_map, std::ostream& out);
-    std::vector<domain::BusRoute> GetAllRoutes();
+    std::vector<domain::BusRoute> GetAllBuses();
     std::vector<domain::Stop> GetAllStops();
+    std::optional<catalogue::BusInfo> GetBusInfo(const std::string_view& bus_name) const;
+    std::optional<catalogue::StopInfo> GetStopInfo(const std::string_view& bus_name) const;
 private:
     const catalogue::TransportCatalogue& db_;
-
-    std::optional<catalogue::BusInfo> GetBusStat(const std::string_view& bus_name) const;
-    std::optional<catalogue::StopInfo> GetStopStat(const std::string_view& bus_name) const;
-    
-    json::Array PrepareAnswer(Requests& requests, std::string& renndered_map);
 };
 }

@@ -21,4 +21,6 @@ namespace json_reader {
     void ProceedDBStoring(json::Array& req, catalogue::TransportCatalogue& db);
     void SendStops(json::Array& stops, catalogue::TransportCatalogue& db);
     void SendBuses(json::Array& buses, catalogue::TransportCatalogue& db);
+
+    void RenderJSON(request_handler::Requests& requests, request_handler::RequestHandler& rh,  const std::string& renndered_map, std::ostream& out);
 }

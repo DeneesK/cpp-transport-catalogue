@@ -1,7 +1,6 @@
 #include "json_reader.h"
 
 namespace json_reader {
-
     using StopToStopDist = std::vector<std::pair<std::string, json::Node>>;
 
     ReaderResult LoadJSON(std::istream& input, catalogue::TransportCatalogue& db) {
@@ -131,4 +130,47 @@ namespace json_reader {
 
         return settings;
     }
+
+void RenderJSON(request_handler::Requests& requests, request_handler::RequestHandler& rh, const std::string& renndered_map, std::ostream& out) {
+    json::Array answer;
+    for(auto req: requests) {
+        if(req.type == "Bus") {
+            if(auto bus_stat = rh.GetBusInfo(req.name)) {
+                answer.push_back(json::Node{json::Dict{
+                    {"curvature", bus_stat.value().curvature},
+                    {"request_id", req.id},
+                    {"route_length", bus_stat.value().length},
+                    {"stop_count", bus_stat.value().stops_on_route},
+                    {"unique_stop_count", bus_stat.value().unique_stops},
+                    }});
+            } else {
+                answer.push_back(json::Node{json::Dict{{"request_id", req.id},
+                {"error_message", json::Node{std::string("not found")}}
+                }});
+            }
+
+        } else if(req.type == "Stop") {
+            if(auto stop_stat = rh.GetStopInfo(req.name)) {
+                json::Array route;
+                for (auto bus: stop_stat.value().buses) {
+                    route.push_back(std::string(bus));
+                }
+                answer.push_back(json::Node{json::Dict{
+                    {"buses", route},
+                    {"request_id", req.id},
+                    }});
+            } else {
+                answer.push_back(json::Node{json::Dict{{"request_id", req.id},
+                {"error_message", json::Node{std::string("not found")}}
+                }});
+            }
+        } else {
+            answer.push_back(json::Node{json::Dict{{"request_id", req.id},
+                {"map", json::Node{renndered_map}}
+                }});
+        }
+    }
+    json::Document doc(answer);
+    json::Print(doc, out);
+}
 }

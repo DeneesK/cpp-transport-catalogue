@@ -8,9 +8,12 @@ namespace map_render {
 MapRender::MapRender(RenderSettings settings): settings_(settings) {}
 
 void MapRender::Render(request_handler::RequestHandler& rh, std::ostream& out) {
-    std::vector<domain::BusRoute> routes = rh.GetAllRoutes();
+    std::vector<domain::BusRoute> routes = rh.GetAllBuses();
     std::unordered_set<geo::Coordinates, geo::CoordinatesHasher> unique_cords;
     auto stops = rh.GetAllStops();
+
+    sort(stops.begin(), stops.end(), [](auto& lhs, auto& rhs){return std::lexicographical_compare(lhs.name.begin(), lhs.name.end(),
+                                                                                                rhs.name.begin(), rhs.name.end());});
     
     for(auto route: routes) {
         unique_cords.insert(route.coordinates.begin(), route.coordinates.end());
