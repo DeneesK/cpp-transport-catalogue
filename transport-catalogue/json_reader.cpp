@@ -6,9 +6,9 @@ namespace json_reader {
     ReaderResult LoadJSON(std::istream& input, catalogue::TransportCatalogue& db) {
         json::Document doc = json::Load(input);
 
-        json::Dict dict = doc.GetRoot().AsMap();
+        json::Dict dict = doc.GetRoot().AsDict();
         json::Array base_requests = dict.at("base_requests").AsArray();
-        json::Dict render_settings = dict.at("render_settings").AsMap();
+        json::Dict render_settings = dict.at("render_settings").AsDict();
         json::Array stat_requests = dict.at("stat_requests").AsArray();
 
         ProceedDBStoring(base_requests, db);
@@ -22,7 +22,7 @@ namespace json_reader {
         json::Array buses;
         json::Array stops;
         for(json::Node elem: req) {
-            if(elem.AsMap().at("type").AsString() == "Bus") {
+            if(elem.AsDict().at("type").AsString() == "Bus") {
                 buses.push_back(elem);
             } else {
                 stops.push_back(elem);
@@ -35,14 +35,14 @@ namespace json_reader {
     void SendStops(json::Array& stops, catalogue::TransportCatalogue& db) {
         StopToStopDist distances;
         for(json::Node stop: stops) {
-            json::Dict stp = stop.AsMap();
+            json::Dict stp = stop.AsDict();
 
             db.AddStop(stp.at("name").AsString(), {stp.at("latitude").AsDouble(), stp.at("longitude").AsDouble()});
             distances.push_back({stp.at("name").AsString(), stp.at("road_distances")});
         }
         for(auto dist: distances) {
             auto from_stop = dist.first;
-            for(auto [to_stop, dist_to]: dist.second.AsMap()) {
+            for(auto [to_stop, dist_to]: dist.second.AsDict()) {
                 auto to = to_stop;
                 db.AddDistance(from_stop, to, dist_to.AsInt());
             }
@@ -51,7 +51,7 @@ namespace json_reader {
 
     void SendBuses(std::vector<json::Node>& buses, catalogue::TransportCatalogue& db) {
         for(auto bus: buses) {
-            auto bus_dict = bus.AsMap();
+            auto bus_dict = bus.AsDict();
             auto route = bus_dict.at("stops").AsArray();
             std::vector<std::string> stops;
             for(auto stop: route) {
@@ -64,7 +64,7 @@ namespace json_reader {
     request_handler::Requests ParseStatRequests(json::Array stat_requests) {
         request_handler::Requests requests;        
         for(auto req: stat_requests) {
-            json::Dict request = req.AsMap();
+            json::Dict request = req.AsDict();
             auto id = request.at("id").AsInt();
             auto type = request.at("type").AsString();
             if(request.count("name")) {
@@ -131,46 +131,43 @@ namespace json_reader {
         return settings;
     }
 
-void RenderJSON(request_handler::Requests& requests, request_handler::RequestHandler& rh, const std::string& renndered_map, std::ostream& out) {
-    json::Array answer;
+void RenderJSON(request_handler::Requests& requests,
+                request_handler::RequestHandler& rh,
+                const std::string& rendered_map,
+                std::ostream& out
+                ) {
+    json::Builder response;
+    response.StartArray();
     for(auto req: requests) {
         if(req.type == "Bus") {
             if(auto bus_stat = rh.GetBusInfo(req.name)) {
-                answer.push_back(json::Node{json::Dict{
-                    {"curvature", bus_stat.value().curvature},
-                    {"request_id", req.id},
-                    {"route_length", bus_stat.value().length},
-                    {"stop_count", bus_stat.value().stops_on_route},
-                    {"unique_stop_count", bus_stat.value().unique_stops},
-                    }});
+                response.StartDict().Key("curvature").Value(bus_stat.value().curvature).
+                        Key("request_id").Value(req.id).
+                        Key("route_length").Value(bus_stat.value().length).
+                        Key("stop_count").Value(bus_stat.value().stops_on_route).
+                        Key("unique_stop_count").Value(bus_stat.value().unique_stops).EndDict();
             } else {
-                answer.push_back(json::Node{json::Dict{{"request_id", req.id},
-                {"error_message", json::Node{std::string("not found")}}
-                }});
+                response.StartDict().Key("request_id").Value(req.id).
+                Key("error_message").Value("not found").EndDict();
             }
 
         } else if(req.type == "Stop") {
             if(auto stop_stat = rh.GetStopInfo(req.name)) {
                 json::Array route;
-                for (auto bus: stop_stat.value().buses) {
+                for (const auto& bus: stop_stat.value().buses) {
                     route.push_back(std::string(bus));
                 }
-                answer.push_back(json::Node{json::Dict{
-                    {"buses", route},
-                    {"request_id", req.id},
-                    }});
+                response.StartDict().Key("buses").Value(json::Node(route)).Key("request_id").Value(req.id).EndDict();
             } else {
-                answer.push_back(json::Node{json::Dict{{"request_id", req.id},
-                {"error_message", json::Node{std::string("not found")}}
-                }});
+                response.StartDict().Key("request_id").Value(req.id).
+                Key("error_message").Value("not found").EndDict();
             }
         } else {
-            answer.push_back(json::Node{json::Dict{{"request_id", req.id},
-                {"map", json::Node{renndered_map}}
-                }});
+            response.StartDict().Key("request_id").Value(req.id).Key("map").Value(rendered_map).EndDict();
         }
     }
-    json::Document doc(answer);
+    auto resp = response.EndArray().Build();
+    json::Document doc(resp);
     json::Print(doc, out);
 }
 }

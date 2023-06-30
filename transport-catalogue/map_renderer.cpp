@@ -15,7 +15,7 @@ void MapRender::Render(request_handler::RequestHandler& rh, std::ostream& out) {
     sort(stops.begin(), stops.end(), [](auto& lhs, auto& rhs){return std::lexicographical_compare(lhs.name.begin(), lhs.name.end(),
                                                                                                 rhs.name.begin(), rhs.name.end());});
     
-    for(auto route: routes) {
+    for(const auto& route: routes) {
         unique_cords.insert(route.coordinates.begin(), route.coordinates.end());
     }
 
@@ -32,9 +32,9 @@ void MapRender::Render(request_handler::RequestHandler& rh, std::ostream& out) {
     doc.Render(out);
 }
 
-void MapRender::LineRender(svg::Document& doc, std::vector<domain::BusRoute> routes, domain::SphereProjector& project) {
+void MapRender::LineRender(svg::Document& doc, const std::vector<domain::BusRoute>& routes, domain::SphereProjector& project) {
     int i = 0;
-    for(auto route: routes) {
+    for(const auto& route: routes) {
         svg::Polyline line;
         if (!route.coordinates.empty()) {
             for(auto stop: route.coordinates) {
@@ -56,9 +56,9 @@ void MapRender::LineRender(svg::Document& doc, std::vector<domain::BusRoute> rou
         }
 }
 
-void MapRender::BusNameRender(svg::Document& doc, std::vector<domain::BusRoute> routes, domain::SphereProjector& project){
+void MapRender::BusNameRender(svg::Document& doc, const std::vector<domain::BusRoute>& routes, domain::SphereProjector& project){
     int i = 0;
-    for(auto route: routes) {
+    for(const auto& route: routes) {
         if (!route.coordinates.empty()) {
             svg::Text text;
             svg::Text underlayer;
@@ -98,8 +98,8 @@ void MapRender::BusNameRender(svg::Document& doc, std::vector<domain::BusRoute> 
     }
 }
 
-void MapRender::StopLableRender(svg::Document& doc, std::vector<domain::Stop> stops, domain::SphereProjector& project) {
-    for(auto stop: stops) {
+void MapRender::StopLableRender(svg::Document& doc, const std::vector<domain::Stop>& stops, domain::SphereProjector& project) {
+    for(const auto& stop: stops) {
         svg::Circle circle;
         circle.SetCenter(project(stop.coords));
         circle.SetRadius(settings_.stop_radius);
@@ -108,8 +108,8 @@ void MapRender::StopLableRender(svg::Document& doc, std::vector<domain::Stop> st
     }
 }
 
-void MapRender::StopNameRender(svg::Document& doc, std::vector<domain::Stop> stops, domain::SphereProjector& project) {
-    for(auto stop: stops) {
+void MapRender::StopNameRender(svg::Document& doc, const std::vector<domain::Stop>& stops, domain::SphereProjector& project) {
+    for(const auto& stop: stops) {
         svg::Text text;
         svg::Text underlayer;
         underlayer.SetFillColor(settings_.underlayer_color);

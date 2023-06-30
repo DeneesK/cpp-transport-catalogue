@@ -1,6 +1,7 @@
 #pragma once
 
 #include "json.h"
+#include "json_builder.h"
 #include "map_renderer.h"
 
 #include <iostream>
@@ -22,5 +23,5 @@ namespace json_reader {
     void SendStops(json::Array& stops, catalogue::TransportCatalogue& db);
     void SendBuses(json::Array& buses, catalogue::TransportCatalogue& db);
 
-    void RenderJSON(request_handler::Requests& requests, request_handler::RequestHandler& rh,  const std::string& renndered_map, std::ostream& out);
+    void RenderJSON(request_handler::Requests& requests, request_handler::RequestHandler& rh,  const std::string& rendered_map, std::ostream& out);
 }
