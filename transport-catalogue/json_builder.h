@@ -33,6 +33,11 @@ namespace json {
     public:
         ItemContext(Builder& builder): builder_(builder) {
         }
+        KeyItemContext Key(std::string&& value);
+        DictItemContext StartDict();
+        ArrayItemContext StartArray();
+        Builder& EndDict();
+        Builder& EndArray();
     protected:
         Builder& Get() {
             return builder_;
@@ -46,8 +51,9 @@ namespace json {
         DictItemContext(Builder& builder): ItemContext(builder) {
         }
 
-        Builder& EndDict();
-        KeyItemContext Key(std::string&& value);
+        DictItemContext StartDict()  = delete;
+        ArrayItemContext StartArray()  = delete;
+        Builder& EndArray() = delete;
     };
 
     class ArrayItemContext : public ItemContext {
@@ -56,9 +62,9 @@ namespace json {
         }
 
         ArrayItemContext Value(json::Node&& value);
-        DictItemContext StartDict();
-        ArrayItemContext StartArray();
-        Builder& EndArray();
+
+        Builder& EndDict() = delete;
+        KeyItemContext Key(std::string&& value) = delete;
     };
 
     class KeyItemContext : public ItemContext {
@@ -67,7 +73,9 @@ namespace json {
         }
 
         DictItemContext Value(json::Node&& value);
-        DictItemContext StartDict();
-        ArrayItemContext StartArray();
+
+        KeyItemContext Key(std::string&& value) = delete;
+        Builder& EndDict() = delete;
+        Builder& EndArray() = delete;
     };
 } 

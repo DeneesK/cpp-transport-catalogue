@@ -7,13 +7,13 @@ namespace json {
         return DictItemContext{builder};
     }
 
-    ArrayItemContext KeyItemContext::StartArray() {
+    ArrayItemContext ItemContext::StartArray() {
          auto& builder = Get();
          builder.StartArray();
          return ArrayItemContext{builder};       
     }
 
-    DictItemContext KeyItemContext::StartDict() {
+    DictItemContext ItemContext::StartDict() {
          auto& builder = Get();
          builder.StartDict();
          return DictItemContext{builder};       
@@ -25,30 +25,18 @@ namespace json {
         return ArrayItemContext{builder};           
     }
 
-    DictItemContext ArrayItemContext::StartDict() {
-        auto& builder = Get();
-        builder.StartDict();
-        return DictItemContext{builder};        
-    }
-
-    ArrayItemContext ArrayItemContext::StartArray() {
-         auto& builder = Get();
-         builder.StartArray();
-         return ArrayItemContext{builder};      
-    }
-
-    Builder& ArrayItemContext::EndArray() {
+    Builder& ItemContext::EndArray() {
          auto& builder = Get();
          builder.EndArray();
          return builder;              
     }
 
-    Builder& DictItemContext::EndDict() {
+    Builder& ItemContext::EndDict() {
          auto& builder = Get();
          builder.EndDict();
          return builder;             
     }
-    KeyItemContext DictItemContext::Key(std::string&& value) {
+    KeyItemContext ItemContext::Key(std::string&& value) {
          auto& builder = Get();
          builder.Key(std::move(value));
          return KeyItemContext{builder};   
